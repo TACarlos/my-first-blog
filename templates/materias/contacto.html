@@ -1,0 +1,24 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}Contacto{% endblock%}
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+{% block subtitle%}
+  <div class="container" style="padding:10px; width:50%; background-color: rgba(221,224,221,0.8);">
+  	{% if info_enviado%}
+  		<p> Su mensaje ha sido enviado</p>
+  		<h1> informacion enviada </h1>
+  		<h4> Email : {{email}}</h4>
+  		<h4> titulo : {{titulo}}</h4>
+  		<h4> texto : {{texto}}</h4>
+  	{% else%}
+    	<form action="." method="POST">
+    		{% csrf_token %}
+			{{form.as_p}}
+     	 <input type="submit" value="submit"/>
+     	</form>
+  	{% endif%}
+
+  </div>
+{% endblock%}

@@ -1,0 +1,59 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}Materias{% endblock%}
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
+{% block subtitle%}Elige tu materia{% endblock%}
+{% block content %}
+<section id="one" class="wrapper style1" style="padding: 2px;">
+    <ul class="breadcrumb">
+  <li><a href="/">Inicio</a></li>
+  <li><a href="/nivel">Nivel</a></li>
+  <li><a href="{% url 'materia:singleNivel' id_niv=niv.id %}">{{niv.nombre}}</a></li>
+  <li class="active">{{grado.nombre}}</li> 
+</ul>
+
+  {% if user.is_authenticated and user.is_staff %}
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar Materia</button>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+                <form action="." method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                   <input type="submit" value="Guardar"/>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endif%}
+    <div class="inner">
+    {% if materia %}
+      {% for g in materia %}
+<div class="card mb-3">
+            {% if g.photo %}
+            <div class="matte" style="background-image: url(/{{g.photo.url}})"></div>
+            {%else%}
+            <img class="card-img-top" src=".." alt="Card image cap">
+            {%endif%}
+  <div class="card-body">
+    <h4 class="card-title">{{g.nombre}}</h4>
+    <p class="card-text">{{g.Descripcion}}</p>
+    <p class="card-text">                <a href="{% url 'materia:singleMateria' id_niv=niv.id id_grado=grado.id id_mat=g.id %}" class="button alt">Empezar</a></p>
+  </div>
+</div>
+      {% endfor%}
+    {% else%}
+      <h1>Lo sentimos no hay niveles disponibles</h1>
+    {% endif%}
+  </div>
+</section>
+{% endblock %}

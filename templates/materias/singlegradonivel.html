@@ -1,0 +1,58 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}{{niv.nombre}}{% endblock%}
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
+{% block subtitle%}Elige tu Grado{% endblock%}
+{% block content %}
+<section id="one" class="wrapper style1" style="padding: 2px;">
+     <ul class="breadcrumb">
+  <li><a href="/">Inicio</a></li>
+  <li><a href="/nivel">Nivel</a></li>
+  <li class="active">{{niv.nombre}}</li>
+</ul>
+  {% if user.is_authenticated and user.is_staff %}
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar Grado</button>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+                <form action="." method="POST">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                   <input type="submit" value="Guardar"/>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endif%}
+  <div class="inner">
+    {% if grado %}
+      {% for g in grado %}
+        <p>{{g.descripcion}}</p>
+        <article class="feature left">
+          <span class="image"><img src="{% static 'images/pic01.jpg' %}" alt="" /></span>
+          <div class="content">
+            <h2>{{g.nombre}}</h2>
+            <p>{{g.Descripcion}}</p>
+            <ul class="actions">
+              <li>
+                <a href="{% url 'materia:singleGrado' id_niv=niv.id id_grado=g.id %}" class="button alt">Empezar</a>
+              </li>
+            </ul>
+          </div>
+        </article>
+      {% endfor%}
+    {% else%}
+      <h1>Lo sentimos no hay niveles disponibles</h1>
+    {% endif%}
+  </div>
+</section>
+{% endblock %}

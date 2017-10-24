@@ -1,0 +1,63 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}{{materia.nombre}}{% endblock%}
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% endblock %}
+{% block subtitle%}Elige alguno de los temas{% endblock%}
+{% block content %}
+<section id="one" class="wrapper style1" style="padding: 2px;">
+    <ul class="breadcrumb">
+  <li><a href="/">Inicio</a></li>
+  <li><a href="/nivel">Nivel</a></li>
+  <li><a href="{% url 'materia:singleNivel' id_niv=niv.id %}">{{niv.nombre}}</a></li>
+  <li><a href="{% url 'materia:singleGrado' id_niv=niv.id id_grado=grado.id %}">{{grado.nombre}}</a></li>
+  <li class="active">{{materia.nombre}}</a></li> 
+</ul>
+
+  {% if user.is_authenticated and user.is_staff %}
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar Tema</button>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+                <form action="." method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                   <input type="submit" value="Guardar"/>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {%endif%}
+    <div class="inner">
+    {% if tema %}
+    <div class="card-deck">
+      {% for g in tema %}        
+          <div class="card" style="min-width: 300px;max-width: 300px;margin-bottom: 20px;">
+             {% if g.photo %}
+            <div class="tema" style="background-image: url(/{{g.photo.url}})"></div>
+            {%else%}
+            <img class="card-img-top" src=".." alt="Card image cap">
+            {%endif%}
+            <div class="card-body">
+                <h4 class="card-title">{{g.nombre}}</h4>
+                 <p class="card-text">{{g.Descripcion}}</p>
+            </div>
+          <div class="card-footer">
+          <button type="button" class="btn btn-outline-primary"><a href="{% url 'materia:singleTema' id_niv=niv.id id_grado=grado.id id_mat=materia.id id_tema=g.id %}">Comenzar</a> </button>
+    </div>
+        </div>
+      {% endfor%}
+    {% else%}
+      <h1>Lo sentimos no hay temas disponibles</h1>
+    {% endif%}
+  </div>
+</section>
+{% endblock %}

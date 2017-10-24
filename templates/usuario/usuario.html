@@ -1,0 +1,26 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}{{user.username}}{% endblock%}
+  <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+{% block subtitle%}
+ 		{% if user.userprofile.photo %}
+          <center>
+          <figure class="figure center">
+          <div class="perf" style="background-image: url(/{{user.userprofile.photo.url}})"></div>
+          <figcaption class="figure-caption text-right">{{ user.username}}</figcaption>
+          </figure>
+          </center>
+ 		{% else %}
+		<h1>{{user.username}}</h1>
+		{% endif %} 
+{% endblock%}       
+  <center>
+          <figure class="figure center">
+          <div class="perf" style="background-image: url(/{{users.userprofile.photo.url}})"></div>
+          <figcaption class="figure-caption text-right">{{ users.username}}</figcaption>
+          </figure>
+          <p>Eres invitado {{user.username}}{{idus}}={{user.id}}</p>
+          </center>

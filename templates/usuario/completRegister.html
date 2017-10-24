@@ -1,0 +1,16 @@
+{% extends 'base/base.html'%}
+{% load staticfiles %}
+{% block title%}Contacto{% endblock%}
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+{% endblock %}
+{% block subtitle%}
+  <div class="container" style="padding:10px; width:50%; background-color: rgba(221,224,221,0.8);">
+    	<form action="." method="POST" enctype="multipart/form-data">
+    		{% csrf_token %}
+			{{form.as_p}}
+     	 <input type="submit" value="submit"/>
+     	</form>
+
+  </div>
+{% endblock%}
