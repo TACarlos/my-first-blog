@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.views.generic import CreateView
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth import login,logout,authenticate
-from apps.materia.models import userProfile
+from apps.materia.models import userProfile,Materia,Grado
 
 
 from apps.usuario.forms import RegistroForm,CompletRegisterForm
@@ -54,9 +54,16 @@ def CompletRegister(request,id_usa):
 
 def Usuario (request,id_usa):
 	if request.user.is_authenticated():
-		usa = User.objects.get(id=id_usa)
+		usa = User.objects.get(id=id_usa)		
 		userP= userProfile.objects.filter(user_id=id_usa)
-		ctx = {'usa': usa,'userp':userP,'idus':id_usa}
+		if Materia.objects.filter(usuarios=id_usa):
+			mensaje = 'true'
+			mat = Materia.objects.filter(usuarios=id_usa)
+			ctx = {'usa': usa,'userp':userP,'idus':id_usa,'mat':mat,'msj':mensaje}
+		else:
+			mensaje = 'false'
+			ctx = {'usa': usa,'userp':userP,'idus':id_usa,'msj':mensaje}	
+
 		return render(request, 'usuario/usuario.html',ctx)
 	else:
 		return HttpResponseRedirect('/')

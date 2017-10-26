@@ -53,12 +53,36 @@
 
     {% block content %}
     {% endblock %}
-
+      <footer id="footer">
+        <div class="inner">    
     {% block footer %}
     {% endblock %}
+          <ul class="icons">
+            <li><a href="#" class="icon fa-facebook">
+              <span class="label">Facebook</span>
+            </a></li>
+            <li><a href="#" class="icon fa-twitter">
+              <span class="label">Twitter</span>
+            </a></li>
+            <li><a href="#" class="icon fa-instagram">
+              <span class="label">Instagram</span>
+            </a></li>
+            <li><a href="#" class="icon fa-linkedin">
+              <span class="label">LinkedIn</span>
+            </a></li>
+          </ul>
+          <ul class="copyright">
+            <li>Scaj Company</li>
+            <li>Una creacion de la compania scaj</li>
+          </ul>
+        </div>
+      </footer>
+
 
     {% block extrajs %}
     <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.form.min.js' %}"></script>
+    <script src="{% static 'js/demo.js' %}"></script>
     <script src="{% static 'assets/js/skel.min.js' %}"></script>
     <script src="{% static 'assets/js/util.js' %}"></script>
     <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->

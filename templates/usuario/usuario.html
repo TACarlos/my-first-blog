@@ -1,10 +1,13 @@
 {% extends 'base/base.html'%}
 {% load staticfiles %}
 {% block title%}{{user.username}}{% endblock%}
+    {% block extrahead %}
+
   <link rel="stylesheet" href="{% static '/css/bootstrap.min.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+    {% endblock %}
 {% block subtitle%}
  		{% if user.userprofile.photo %}
           <center>
@@ -16,11 +19,40 @@
  		{% else %}
 		<h1>{{user.username}}</h1>
 		{% endif %} 
-{% endblock%}       
-  <center>
-          <figure class="figure center">
-          <div class="perf" style="background-image: url(/{{users.userprofile.photo.url}})"></div>
-          <figcaption class="figure-caption text-right">{{ users.username}}</figcaption>
-          </figure>
-          <p>Eres invitado {{user.username}}{{idus}}={{user.id}}</p>
-          </center>
+{% endblock%}
+{%block content%}
+<section id="one" class="wrapper style1" style="padding-top:20px;"> 
+  <div class="inner">
+<div class="row">
+
+  <div class="col-4" style="background-color:#C5C5C4; padding:10px">
+    {% if msj == 'true' %}
+      <a class="btn btn-primary">
+          <h1 style="color: white;">Mis Materias</h1>
+      </a> 
+      {% for m in mat%}
+      <div class="card text-white bg-light mb-3" style="max-width: 30rem;">
+          <div class="card-body" style="background-image: url(/{{m.photo.url}});">
+          <a class="btn btn-dark" href="{% url 'materia:singleMateria' id_niv=m.niv_id id_grado=m.grado_id id_mat=m.id %}">
+            {{m.nombre}}
+          </a> 
+          </div>
+          <h5>{{m.grado}} de {{m.niv}}</h5>
+      </div>
+      {% endfor%}
+    {%else%}
+      <h2>Uff parece que todavia no tienes nada</h2>
+      <p>vamos a rellenar esto da click 
+        <a href="/nivel" class="btn btn-success" style="color: white;">aqui</a>
+      </p>
+    {%endif%}
+  </div>
+
+  <div class="col-6">col-6</div>
+
+  <div class="col-2">col-2</div>
+
+</div>
+</div>
+</section>
+{%endblock%}       

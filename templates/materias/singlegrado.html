@@ -18,9 +18,9 @@
 </ul>
 
   {% if user.is_authenticated and user.is_staff %}
-  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Agregar Materia</button>
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal1">Agregar Materia</button>
  <!-- Modal -->
-  <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal fade" id="myModal1" role="dialog">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -35,9 +35,32 @@
     </div>
   </div>
   {%endif%}
-    <div class="inner">
+    <div class="inner">  
+      <!--IniciaModal-->
+ <div id="myModal2" class="modal fade"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <h3 id="myModalLabel">Eliminar Materia</h3>
+    
+    <div class="modal-body">
+    <p>¿Realmente desea eliminar la materia <span id="modal_name"></span>?</p>
+    </div>
+    <div class="modal-footer">
+        <form method="post" id="frmEliminar">
+            {% csrf_token %}
+            <input type="hidden" id="modal_idProducto" name="mat_id">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cerrar</button>
+
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+        </form>
+    </div>
+  </div>
+  </div>
+</div>
+<!--EndModal-->
     {% if materia %}
       {% for g in materia %}
+      <tr id="tr{{g.id}}">
 <div class="card mb-3">
             {% if g.photo %}
             <div class="matte" style="background-image: url(/{{g.photo.url}})"></div>
@@ -47,9 +70,22 @@
   <div class="card-body">
     <h4 class="card-title">{{g.nombre}}</h4>
     <p class="card-text">{{g.Descripcion}}</p>
-    <p class="card-text">                <a href="{% url 'materia:singleMateria' id_niv=niv.id id_grado=grado.id id_mat=g.id %}" class="button alt">Empezar</a></p>
+        <td>
+            <form method="post" id="frmEliminar">
+            {% csrf_token %}
+            <input type="hidden" id="idUsuario" name="user.id" value="{{user.id}}">
+            <input type="hidden" id="idProducto1" name="m.id" value="{{g.id}}">
+               <p class="card-text"><button type="submit" class="button alt">Empezar</button></p>
+        </form>
+    </td>
+    {% if user.is_authenticated and user.is_staff %}
+    <td>
+      <a href="#myModal2" role="button" class="btn btn-danger delete" data-toggle="modal" id="{{g.id}}" data-name="{{g.nombre}}"><i class="icon-trash icon-white"></i>Eliminar</a>
+    </td>
+    {%endif%}
   </div>
 </div>
+</tr>
       {% endfor%}
     {% else%}
       <h1>Lo sentimos no hay niveles disponibles</h1>

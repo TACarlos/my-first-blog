@@ -16,7 +16,7 @@
   <li><a href="{% url 'materia:singleNivel' id_niv=niv.id %}">{{niv.nombre}}</a></li>
   <li><a href="{% url 'materia:singleGrado' id_niv=niv.id id_grado=grado.id %}">{{grado.nombre}}</a></li>
   <li><a href="{% url 'materia:singleMateria' id_niv=niv.id id_grado=grado.id id_mat=materia.id %}">{{materia.nombre}}</a></li>
-  <li class="active">{{tema.nombre}}</a></li> 
+  <li class="active">{{tema.nombre}}</li> 
 </ul>
 
   {% if user.is_authenticated and user.is_staff %}

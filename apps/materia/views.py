@@ -4,6 +4,7 @@ from apps.materia.models import Materia, Grado, GradoNivel,Temas, ContentTema
 from apps.materia.forms import ContactForm, AddNivelForm, LoginForm, AddGrado,AddMateria,AddTemas,AddContentTema
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import login,logout,authenticate
+import simplejson
 # Create your views here.
 def index (request):
     return render(request, 'materias/index.html')
@@ -62,7 +63,7 @@ def login_view(request):
                 usuario  = authenticate(username=username,password=password)
                 if usuario is not None and usuario.is_active:
                     login(request,usuario)
-                    return HttpResponseRedirect('/')
+                    return HttpResponseRedirect('/usuario/%s'%(usuario.id))
                 else:
                     mensaje = 'Usuario y/o Password es incorrecto'
         form = LoginForm()
@@ -96,15 +97,38 @@ def singleGrado(request,id_niv,id_grado):
         niv = Grado.objects.get(id=id_niv)
         grados = GradoNivel.objects.get(id=id_grado)
         materia = Materia.objects.filter(grado_id=id_grado)
+        form = AddMateria()
         if request.method == "POST":
-            form = AddMateria(request.POST,request.FILES)
-            if form.is_valid():
-                add = form.save(commit=False)
-                add.grado_id = id_grado
-                form.save()
-                return HttpResponseRedirect('/nivel/%s/%s'%(id_niv,id_grado))
-        else:
-            form = AddMateria()     
+            if "mat_id" in request.POST:
+                try:
+                    id_producto = request.POST['mat_id']
+                    p = Materia.objects.get(pk=id_producto)
+                    mensaje = {"status":"True","product_id":p.id}
+                    p.delete()
+                    return HttpResponseRedirect('/nivel/%s/%s'%(id_niv,id_grado))
+                except:
+                    mensae = {"status":"False"}
+                    return HttpResponseRedirect('/nivel/%s/%s'%(id_niv,id_grado))
+            if "user.id" in request.POST:
+                us = request.POST['user.id']
+                m = request.POST['m.id']
+                if Materia.objects.filter(pk=m,usuarios=us):
+                    return HttpResponseRedirect('/nivel/%s/%s/%s'%(id_niv,id_grado,m))
+                else:
+                    mat = Materia.objects.get(pk=m)
+                    mat.usuarios.add(us)
+                    mat.save()
+                    return HttpResponseRedirect('/nivel/%s/%s/%s'%(id_niv,id_grado,m))
+            else:
+                form = AddMateria(request.POST,request.FILES)
+                if form.is_valid():
+                    add = form.save(commit=False)
+                    add.grado_id = id_grado
+                    add.niv_id = id_niv
+                    form.save()
+                    return HttpResponseRedirect('/nivel/%s/%s'%(id_niv,id_grado))
+                else:
+                    form = AddMateria()     
         ctx = {'niv':niv,'grado':grados,'materia':materia,'form':form}
         return render(request, 'materias/singlegrado.html', ctx)
     else:

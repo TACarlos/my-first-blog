@@ -16,20 +16,6 @@ class TipoUsuario(models.Model):
     def __str__(self):
         return self.tipo  
 
-class userProfile(models.Model):
-
-    def url(self,filename):
-        ruta = "static/MultimediaData/Users/%s/%s"%(self.user.username,filename)
-        return ruta
-
-    user = models.OneToOneField(User)
-    photo = models.ImageField(upload_to=url)
-    telefono = models.CharField(max_length=10,null=True)
-    Tipo = models.ForeignKey(TipoUsuario, null=True,)
-    
-    def __str__(self):
-        return self.user.username
-
 class GradoNivel(models.Model):
     grado = models.ForeignKey(Grado)
     nombre = models.CharField(max_length=50)
@@ -47,10 +33,26 @@ class Materia(models.Model):
     Descripcion = models.TextField(max_length=200)
     status = models.BooleanField(default = True)
     photo = models.ImageField(upload_to=url,null=True)
+    usuarios = models.ManyToManyField(User)
+    niv = models.ForeignKey(Grado, null=True)
 
     def __str__(self):
         return self.nombre
+        
+class userProfile(models.Model):
 
+    def url(self,filename):
+        ruta = "static/MultimediaData/Users/%s/%s"%(self.user.username,filename)
+        return ruta
+
+    user = models.OneToOneField(User)
+    photo = models.ImageField(upload_to=url)
+    telefono = models.CharField(max_length=10,null=True)
+    Tipo = models.ForeignKey(TipoUsuario, null=True,)
+    usuarios = models.ManyToManyField(Materia)
+    
+    def __str__(self):
+        return self.user.username
 class Temas(models.Model):
     def url(self,filename):
         ruta = "static/MultimediaData/Materias/%s/%s/%s"%(self.materia.nombre,self.nombre,str(filename))
