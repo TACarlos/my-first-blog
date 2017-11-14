@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from apps.materia.models import userProfile
+from apps.usuario.models import UserGrupo
 
 
 class RegistroForm(forms.Form):
@@ -56,4 +57,32 @@ class CompletRegisterForm(forms.ModelForm):
 
 		widgets = {
 			'telefono' : forms.TextInput(attrs={'class':'form-control'}),			
+		}
+
+class CreateGroupForm(forms.ModelForm):
+
+	class Meta:
+		model = UserGrupo
+
+		fields = [
+			'maestro',
+			'nombre',
+			'Descripcion',
+			'photo',
+			'status',
+		]
+
+		exclude = {'maestro'}
+
+		labels = {
+			'nombre': 'Cual es el nombre',
+			'Descripcion': 'Pon una pequeña descripcion',
+			'photo': 'Pon una foto de portada chida',
+			'status': '¿visible?',		
+		}
+
+		widgets = {
+			'nombre' : forms.TextInput(attrs={'class':'form-control'}),
+			'Descripcion' : forms.Textarea(attrs={'class':'form-control'}),
+			'status' : forms.NullBooleanSelect(attrs={'class':'form-control'}),				
 		}

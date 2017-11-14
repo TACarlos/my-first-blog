@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from apps.usuario.models import UserGrupo
 
 # Create your models here.
 
@@ -50,6 +51,7 @@ class userProfile(models.Model):
     telefono = models.CharField(max_length=10,null=True)
     Tipo = models.ForeignKey(TipoUsuario, null=True,)
     usuarios = models.ManyToManyField(Materia)
+    grupos = models.ManyToManyField(UserGrupo)
     
     def __str__(self):
         return self.user.username
@@ -78,3 +80,18 @@ class ContentTema(models.Model):
     video = models.URLField()
     def __str__(self):
         return self.tema.nombre
+
+class temaProblema(models.Model):
+    tema = models.ForeignKey(Temas)
+    problema = models.CharField(max_length=50)
+    resultado = models.CharField(max_length=50)
+    respuesta = models.CharField(max_length=50, null=True,blank=True)
+    usa = models.ManyToManyField(User,blank=True)
+    def __str__(self):
+        return self.problema
+class proresuletos(models.Model):
+    tema = models.ForeignKey(Temas,blank=True,null=True)
+    use = models.ForeignKey(User)
+    pro = models.ForeignKey(temaProblema)
+    def __str__(self):
+        return self.pro.problema

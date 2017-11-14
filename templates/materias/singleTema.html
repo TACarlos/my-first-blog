@@ -37,6 +37,23 @@
     </div>
   </div>
   {%endif%}
+    <div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+<form action="." method="POST" enctype="multipart/form-data">
+            <h1>{{pr}}</h1>
+            {% csrf_token %}
+            <input type="hidden" id="idUsuario" name="user_id" value="{{user.id}}">
+            <input type="hidden" id="idpro" name="pro.id" value="{{pr.id}}">
+            Resultado: <input type="text" name="fname"><br>
+          <input type="submit" value="Validar"/>
+        </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
     <div class="inner">
     {% if cont %}
      {% for g in cont %}
@@ -46,17 +63,19 @@
 <iframe width="660" height="415" src="{{g.video}}" frameborder="0" allowfullscreen></iframe>
 </div>
     <div class="col col-lg-4" style="background-color: white; padding: 5px;">
-      <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Mas...
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
+<h1>{{msg}}</h1>
+{% if pro %}
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal2">Resolver</button>
+<h6 class="dropdown-header">Problemas por resolver</h6> 
+   {% for p in pro %}
+      <div class="card text-white bg-primary mb-3" style="max-width: 10rem;">
+  <div class="card-header">{{p.problema}}</div>
 </div>
-<h3>Aqui va los problemas</h3>
+     {%endfor%}
+     {%else%}
+     <h3>Felicidades¡ Terminaste los problemas de este tema</h3>
+     {%endif%}
+
     </div>
   </div>
 </div>
@@ -66,4 +85,10 @@
     {% endif%}
   </div>
 </section>
-{% endblock %}
+{% endblock %}        <form action="." method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" id="idUsuario" name="user_id" value="{{user.id}}">
+            <input type="hidden" id="idpro" name="pro.id" value="{{p.id}}">
+            Resultado: <input type="text" name="fname"><br>
+          <input type="submit" value="Validar"/>
+        </form>

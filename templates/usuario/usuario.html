@@ -7,6 +7,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     {% endblock %}
 {% block subtitle%}
  		{% if user.userprofile.photo %}
@@ -21,38 +25,117 @@
 		{% endif %} 
 {% endblock%}
 {%block content%}
-<section id="one" class="wrapper style1" style="padding-top:20px;"> 
+<section id="one" class="wrapper style1" style="padding-top:20px;">
   <div class="inner">
-<div class="row">
-
-  <div class="col-4" style="background-color:#C5C5C4; padding:10px">
-    {% if msj == 'true' %}
-      <a class="btn btn-primary">
-          <h1 style="color: white;">Mis Materias</h1>
-      </a> 
+  {% if user.id == usa.id%}
+    <nav class="nav nav-tabs" id="myTab" role="tablist">
+  <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Mis Materias</a>
+  <a class="nav-item nav-link" id="nav-grupo-tab" data-toggle="tab" href="#nav-grupo" role="tab" aria-controls="nav-grupo" aria-selected="false">Grupos</a>
+  <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Buscar Grupos</a>
+</nav>
+<div class="tab-content" id="nav-tabContent" style="background-color:white;padding: 20px;">
+  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+    <div class="row">
+ {% if msj == 'true' %}
       {% for m in mat%}
-      <div class="card text-white bg-light mb-3" style="max-width: 30rem;">
-          <div class="card-body" style="background-image: url(/{{m.photo.url}});">
-          <a class="btn btn-dark" href="{% url 'materia:singleMateria' id_niv=m.niv_id id_grado=m.grado_id id_mat=m.id %}">
-            {{m.nombre}}
-          </a> 
-          </div>
-          <h5>{{m.grado}} de {{m.niv}}</h5>
+
+  <div class="col-sm-4" style="padding-right:10px;padding-bottom: 10px;">
+    <div class="card" style="background-image: url(/{{m.photo.url}}); padding: 15px;">
+      <div class="card-body" style="background-color: rgba(9,18,21, .9);">
+        <h4 class="card-title" style="color: white;">{{m.nombre}}</h4>
+        <p class="card-text">{{m.grado}} de {{m.niv}}</p>
+        <a href="{% url 'materia:singleMateria' id_niv=m.niv_id id_grado=m.grado_id id_mat=m.id %}" class="btn btn-primary" style="color: white;">Continuar</a>
       </div>
+    </div>
+  </div>
+
       {% endfor%}
     {%else%}
       <h2>Uff parece que todavia no tienes nada</h2>
       <p>vamos a rellenar esto da click 
-        <a href="/nivel" class="btn btn-success" style="color: white;">aqui</a>
+        <a href="/nivel" class="btn btn-success" style="color: white;">Aqui</a>
       </p>
     {%endif%}
+</div>
   </div>
 
-  <div class="col-6">col-6</div>
 
-  <div class="col-2">col-2</div>
+  <div class="tab-pane fade" id="nav-grupo" role="tabpanel" aria-labelledby="nav-grupo-tab">
+      {% if msj2.id == 2 %}
 
+  {% if myg %} 
+  <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group mr-2" role="group" aria-label="First group">
+    <button type="button" class="btn btn-secondary" data-target="#myModal" data-toggle="modal">Agregar</button>
+  </div>
 </div>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+                <form action="." method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                   <input type="submit" value="Guardar"/>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding: 10px;">
+  {% for a in myg %}
+  <div class="col-sm-3" style="padding-right:5px;padding-bottom: 10px;">
+    <div class="card" style="background-image: url(/{{a.photo.url}}); padding: 15px;">
+      <div class="card-body" style="background-color: rgba(9,18,21, .9);">
+        <h4 class="card-title" style="color: white;">{{a.nombre}}</h4>
+        <p class="card-text">de {{a.maestro}}</p>
+        <a href="{% url 'usuario:singleGrupo' id_mst=a.maestro_id id_grupo=a.id%}" class="btn btn-primary" style="color: white;">Entrar
+</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}</div>          
+  {% else%}
+          <h2>Heey!! parece que todavia no tienes ningun grupo</h2>
+      <p>vamos a her grupos, da click</p>
+
+        <a class="btn btn-info" data-toggle="modal" data-target="#myModal" style="color: white;">Aqui</a>
+ <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+                <form action="." method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{form.as_p}}
+                   <input type="submit" value="Guardar"/>
+                </form>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% else %}
+    <p>Busca grupos</p>
+        <h3>Buscar Grupos</h3>
+
+  {% endif %}
+  </div>
+  <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+  <div class="input-group">{% csrf_token %}
+    <input type="text" class="form-control" placeholder="Buscar grupos" id="search" name="search" aria-label="Input group example" aria-describedby="btnGroupAddon">
+  </div>    
+       
+
+            <ul id="search_results" data-toggle="dropdown">
+        </ul>
+  </div>
+</div>
+  {%endif%}
 </div>
 </section>
 {%endblock%}       

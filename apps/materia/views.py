@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse,HttpResponseRedirect
-from apps.materia.models import Materia, Grado, GradoNivel,Temas, ContentTema
-from apps.materia.forms import ContactForm, AddNivelForm, LoginForm, AddGrado,AddMateria,AddTemas,AddContentTema
+from apps.materia.models import Materia, Grado, GradoNivel,Temas, ContentTema,temaProblema,proresuletos
+from apps.materia.forms import ContactForm, AddNivelForm, LoginForm, AddGrado,AddMateria,AddTemas,AddContentTema,ProblemaForm,proresultForm
 from django.core.mail import EmailMultiAlternatives
 from django.contrib.auth import login,logout,authenticate
-import simplejson
+import simplejson,random
 # Create your views here.
 def index (request):
     return render(request, 'materias/index.html')
@@ -152,23 +152,43 @@ def singleMateria(request,id_niv,id_grado,id_mat):
         return render(request, 'materias/singlemateria.html', ctx)
     else:
         return HttpResponseRedirect('/login')
-def singleTema(request,id_niv,id_grado,id_mat,id_tema):
+def singleTema(request,id_niv,id_grado,id_mat,id_tema,id_use):
     if request.user.is_authenticated():
+        msg = ""
         niv = Grado.objects.get(id=id_niv)
         grados = GradoNivel.objects.get(id=id_grado)
         materia = Materia.objects.get(id=id_mat)
         tema = Temas.objects.get(id=id_tema)
         contenido = ContentTema.objects.filter(tema_id=id_tema)
+        problemas = temaProblema.objects.filter(tema_id=id_tema)
+        problemas2 = problemas.exclude(usa=id_use)
+        if problemas2:
+            problemarandom = random.choice(problemas2)
+        else:
+            problemarandom=""
         if request.method == "POST":
+            if "pro.id" in request.POST: 
+                id_prob = request.POST['pro.id']
+                id_us = request.POST['user_id']
+                problema = temaProblema.objects.get(id=id_prob)
+                resultado = request.POST['fname']
+                if problema.resultado == resultado:
+                    msg = "¡Felicidades! Continua"
+                    problema.usa.add(id_use)
+                    problema.save()
+                    return HttpResponseRedirect('/nivel/%s/%s/%s/%s/%s'%(id_niv,id_grado,id_mat,id_tema,id_use))
+                else:
+                    msg = "Incorrecto sigue intentando"
+                    return HttpResponseRedirect('/nivel/%s/%s/%s/%s/%s'%(id_niv,id_grado,id_mat,id_tema,id_use))
             form = AddContentTema(request.POST,request.FILES)
             if form.is_valid():
                 add = form.save(commit=False)
                 add.tema_id = id_tema
                 form.save()
-                return HttpResponseRedirect('/nivel/%s/%s/%s/%s'%(id_niv,id_grado,id_mat,id_tema))
+                return HttpResponseRedirect('/nivel/%s/%s/%s/%s/%s'%(id_niv,id_grado,id_mat,id_tema,id_use))
         else:
             form = AddContentTema()     
-        ctx = {'niv':niv,'grado':grados,'materia':materia,'form':form,'tema':tema,'cont':contenido}
+        ctx = {'niv':niv,'grado':grados,'materia':materia,'form':form,'tema':tema,'cont':contenido,'pro':problemas2,'msg':msg,'pr':problemarandom}
         return render(request, 'materias/singleTema.html', ctx)
     else:
         return HttpResponseRedirect('/login')

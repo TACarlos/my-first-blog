@@ -1,0 +1,19 @@
+
+{% if grupos.count > 0 %}
+
+	{% for grupo in grupos %}
+	<li>
+		<a href="/usuario/grupos/{{grupo.maestro_id}}/{{grupo.id}}">
+<div class="media" style="background-color: #C9CCCD; max-width: 200px;" >
+  <span style="background-image: url(/{{grupo.photo.url}}); width: 50px;height: 50px;"></span>
+  <div class="media-body" style="padding: 1px;">
+    <h5 class="mt-0" style="padding: 1px;">{{grupo.nombre}}</h5>
+    <h5 style="font-size: 7px;">{{grupo.maestro}}</h5>
+  </div>
+</div></a></li>
+	{%endfor%}
+
+{%else%}
+	<li>no hay!..no existe!</li>
+{% endif %}
+

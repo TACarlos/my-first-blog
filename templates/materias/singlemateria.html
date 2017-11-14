@@ -51,7 +51,7 @@
                  <p class="card-text">{{g.Descripcion}}</p>
             </div>
           <div class="card-footer">
-          <button type="button" class="btn btn-outline-primary"><a href="{% url 'materia:singleTema' id_niv=niv.id id_grado=grado.id id_mat=materia.id id_tema=g.id %}">Comenzar</a> </button>
+          <button type="button" class="btn btn-outline-primary"><a href="{% url 'materia:singleTema' id_niv=niv.id id_grado=grado.id id_mat=materia.id id_tema=g.id id_use=user.id %}">Comenzar</a> </button>
     </div>
         </div>
       {% endfor%}

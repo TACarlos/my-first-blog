@@ -1,5 +1,5 @@
 from django import forms
-from apps.materia.models import Grado,GradoNivel, Materia,Temas,ContentTema
+from apps.materia.models import Grado,GradoNivel, Materia,Temas,ContentTema,temaProblema,proresuletos
 
 class ContactForm(forms.Form):
     Email = forms.EmailField(widget=forms.TextInput())
@@ -142,3 +142,34 @@ class AddContentTema(forms.ModelForm):
 			'Descripcion' : forms.Textarea(attrs={'class':'form-control'}),
 			'status' : forms.NullBooleanSelect(attrs={'class':'form-control'}),			
 		}
+
+class ProblemaForm(forms.ModelForm):
+
+	class Meta:
+		model = temaProblema
+
+		fields = [
+			'tema',
+			'problema',
+			'resultado',
+			'respuesta',
+			'usa',
+		]
+
+		exclude = {
+		'tema',
+		'problema',
+		'resultado',
+		'respuesta'
+
+		}
+class proresultForm(forms.ModelForm):
+
+	class Meta:
+		model = proresuletos
+
+		fields = [
+			'use',
+			'pro',
+		]
+
