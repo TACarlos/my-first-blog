@@ -16,7 +16,7 @@ requests-oauthlib==0.8.0
 six==1.11.0
 social-auth-app-django==1.2.0
 social-auth-core==1.4.0
-urllib3==1.22
+urllib3==1.26.5
 dj-database-url==0.3.0
 dj-static==0.0.6
 static==0.4
